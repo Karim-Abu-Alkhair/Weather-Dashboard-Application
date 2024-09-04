@@ -1,70 +1,91 @@
-# Getting Started with Create React App
+# WeatherApp Documentation
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Overview
 
-## Available Scripts
+WeatherApp is a React application that fetches weather data for a specified city using the OpenWeatherMap API. It allows users to search for a city, view current weather details, and have their last searched city persist across page refreshes.
 
-In the project directory, you can run:
+## Key Features
 
-### `npm start`
+- **City Search:** Users can search for a city's weather by entering the city name in the search bar.
+- **Weather Display:** The application displays the weather data, including temperature, humidity, wind speed, and weather description.
+- **Persistent Search:** The last searched city is saved in local storage and is automatically fetched when the user revisits or refreshes the page.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Components
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### `App` Component
 
-### `npm test`
+The `App` component is the main component that handles the city's weather search and display.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+#### State Variables
 
-### `npm run build`
+- `city`: Stores the current city entered by the user.
+- `invalidCity`: Boolean flag indicating whether the entered city is invalid.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+#### Methods
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- `componentDidMount`:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+  - Fetches the last searched city from local storage.
+  - Triggers weather data fetching if a city is found in local storage.
 
-### `npm run eject`
+- `handleSubmit`:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+  - Prevents form submission if the input is empty.
+  - Saves the searched city in local storage.
+  - Dispatches the `fetchWeather` action to fetch weather data for the entered city.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- `handleCityChange`:
+  - Updates the `city` state as the user types.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+#### JSX Structure
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+The component renders a search bar, a `WeatherCard` to display the weather data, and a footer. Conditional rendering is used to display loading states, errors, and the weather card based on the state.
 
-## Learn More
+### `WeatherCard` Component
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+This component is responsible for displaying the weather data. It shows details such as temperature, humidity, wind speed, and a weather description.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### `Footer` Component
 
-### Code Splitting
+A simple footer component that displays the creator's name and the current year.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Redux Actions
 
-### Analyzing the Bundle Size
+### `fetchWeather(city)`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+This action fetches the weather data for the specified city using the OpenWeatherMap API. It dispatches the following actions:
 
-### Making a Progressive Web App
+- `FETCH_WEATHER_REQUEST`: Dispatched when the weather fetching process starts.
+- `FETCH_WEATHER_SUCCESS`: Dispatched with the weather data if the API request is successful.
+- `FETCH_WEATHER_FAILURE`: Dispatched with an error message if the API request fails.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Redux Reducer
 
-### Advanced Configuration
+### `weatherReducer`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Manages the state of the weather data in the application:
 
-### Deployment
+- `loading`: Indicates whether the weather data is currently being fetched.
+- `weatherData`: Stores the fetched weather data.
+- `error`: Stores any error messages if the data fetching fails.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## Store Configuration
 
-### `npm run build` fails to minify
+The store is configured using Redux Toolkit's `configureStore` function, which includes the `weatherReducer`.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Local Storage
+
+- **Last Searched City:** The application saves the last searched city in `localStorage` under the key `lastSearchedCity`. This allows the app to reload the last searched city's weather data automatically when the user revisits the page.
+
+## How to Use
+
+1. **Search for a City:**
+   - Enter the name of a city in the search bar.
+   - Press the search button to fetch the weather data.
+2. **View Weather Data:**
+
+   - If the city is valid, the weather details will be displayed on the screen.
+   - If the city is invalid, an error message will be shown.
+
+3. **Persistent Search:**
+   - The last searched city is saved automatically. If you refresh the page, the app will load the weather data for the last searched city.
